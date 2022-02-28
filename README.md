@@ -5,6 +5,6 @@
 # ENGR 290
 
 ### Hovercraft Project
-- [] Assignment 1
-- [] Assignment 2
-- [] PDR
+- [ ] Assignment 1
+- [ ] Assignment 2
+- [ ] PDR
