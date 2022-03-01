@@ -48,7 +48,7 @@ void loop()
     delayMicroseconds(50);
     digitalWrite(TRIG_PIN, LOW);
 
-    recv_buf = pulseIn (ECHO_PIN, HIGH);
+    recv_buf = pulseIn(ECHO_PIN, HIGH);
     if(recv_buf > 1 && recv_buf < 60000){
       length_mm = recv_buf*0.34/2;
       // Serial.print("length (mm): ");
