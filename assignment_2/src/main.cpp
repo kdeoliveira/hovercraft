@@ -4,7 +4,7 @@
 
 #define SerialDebug true
 
-int intPin = 13; // These can be changed, 2 and 3 are the Arduinos ext int pins
+// int intPin = 5; // These can be changed, 2 and 3 are the Arduinos ext int pins
 int myLed = 12;  // Set up pin 13 led for toggling
 
 #define I2Cclock 400000
@@ -40,13 +40,10 @@ void setup()
 {
   Serial.begin(38400);
   myservo.attach(9); // attaches the servo on pin 9 to the servo object
-  while (!Serial)
-    ;
+  while (!Serial);
 
   Wire.begin();
 
-  pinMode(intPin, INPUT);
-  digitalWrite(intPin, LOW);
   pinMode(myLed, OUTPUT);
   digitalWrite(myLed, HIGH);
 
@@ -126,10 +123,13 @@ void setup()
     myIMU.getGres();
     myIMU.getMres();
 
-    // The next call delays for 4 seconds, and then records about 15 seconds of
-    // data to calculate bias and scale.
-    //    myIMU.magCalMPU9250(myIMU.magBias, myIMU.magScale);
-    Serial.println("AK8963 mag biases (mG)");
+
+
+    //    delay(2000); // Add delay to see results before serial spew of data
+
+    if (SerialDebug)
+    {
+          Serial.println("AK8963 mag biases (mG)");
     Serial.println(myIMU.magBias[0]);
     Serial.println(myIMU.magBias[1]);
     Serial.println(myIMU.magBias[2]);
@@ -138,10 +138,7 @@ void setup()
     Serial.println(myIMU.magScale[0]);
     Serial.println(myIMU.magScale[1]);
     Serial.println(myIMU.magScale[2]);
-    //    delay(2000); // Add delay to see results before serial spew of data
 
-    if (SerialDebug)
-    {
       Serial.println("Magnetometer:");
       Serial.print("X-Axis sensitivity adjustment value ");
       Serial.println(myIMU.factoryMagCalibration[0], 2);
@@ -202,7 +199,9 @@ void loop()
 
   // CALCULATE
   myIMU.delt_t = millis() - myIMU.count;
-  digitalWrite(myLed, !digitalRead(myLed));
+
+  // digitalWrite(myLed, digitalRead(myLed));
+
 
   myIMU.yaw = atan2(2.0f * (*(getQ() + 1) * *(getQ() + 2) + *getQ() * *(getQ() + 3)), *getQ() * *getQ() + *(getQ() + 1) * *(getQ() + 1) - *(getQ() + 2) * *(getQ() + 2) - *(getQ() + 3) * *(getQ() + 3));
 
@@ -214,8 +213,10 @@ void loop()
   if(myIMU.yaw + 180 < 180 || myIMU.yaw + 180 > 0){
     int result_servo = (int)map( floor( myIMU.yaw) + 180, 0, 180, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);
     if(result_servo == 0){
-      digitalWrite(intPin, HIGH);
+        digitalWrite(myLed, LOW);
+        Serial.print("Out of bound\r");
     }else{
+      digitalWrite(myLed, HIGH);
       myservo.writeMicroseconds( result_servo);
       delay(10);
     }
@@ -223,28 +224,12 @@ void loop()
   
   if (myIMU.delt_t > 500)
   {
-
-    // myIMU.pitch = -asin(2.0f * (*(getQ()+1) * *(getQ()+3) - *getQ()
-    //               * *(getQ()+2)));
-    // myIMU.roll  = atan2(2.0f * (*getQ() * *(getQ()+1) + *(getQ()+2)
-    //               * *(getQ()+3)), *getQ() * *getQ() - *(getQ()+1)
-    //               * *(getQ()+1) - *(getQ()+2) * *(getQ()+2) + *(getQ()+3)
-    //               * *(getQ()+3));
-    // myIMU.pitch *= RAD_TO_DEG;
-
-    // Declination of SparkFun Electronics (40°05'26.6"N 105°11'05.9"W) is
-    // 	8° 30' E  ± 0° 21' (or 8.5°) on 2016-07-19
-    // - http://www.ngdc.noaa.gov/geomag-web/#declination
-
-    // myIMU.roll *= RAD_TO_DEG;
-
-
     if (SerialDebug)
     {
       Serial.print("Yaw: ");
-      Serial.println(myIMU.yaw + 180, 2);
+      Serial.print(myIMU.yaw + 180, 2);
 
-      Serial.print("rate = ");
+      Serial.print("\trate = ");
       Serial.print((float)myIMU.sumCount / myIMU.sum, 2);
       Serial.println(" Hz");
 
