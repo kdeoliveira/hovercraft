@@ -10,7 +10,15 @@ unsigned long length_mm = 0;
 #define LED_PIN 5
 #define LED_WARNING 4
 #define BTN_PIN 2
-#define IR_PIN A0
+
+
+
+#ifdef __AVR_ATmega328P__
+    #define IR_PIN A3
+#else
+    #define IR_PIN A0
+#endif
+
 volatile bool btn_state = false;
 
 

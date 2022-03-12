@@ -5,7 +5,7 @@
 namespace hovercraft
 {
 
-    const char whitespace[5] = {0x20,0x20,0x20, 0x20,0x20};
+    const char whitespace[5] = {0x20,0x20,0x20,0x20,0x20};
     
 
     long map(long x, long min, long max, long out_min, long out_max)
