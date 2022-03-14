@@ -87,12 +87,7 @@ void setup()
     if (SerialDebug)
     {
       //  Serial.println("Calibration values: ");
-      Serial.print("X-Axis factory sensitivity adjustment value ");
-      Serial.println(mpu_imu.factoryMagCalibration[0], 2);
-      Serial.print("Y-Axis factory sensitivity adjustment value ");
-      Serial.println(mpu_imu.factoryMagCalibration[1], 2);
-      Serial.print("Z-Axis factory sensitivity adjustment value ");
-      Serial.println(mpu_imu.factoryMagCalibration[2], 2);
+      print_calibration_imu(mpu_imu);
     }
 
     // Get sensor resolutions, only need to do this once

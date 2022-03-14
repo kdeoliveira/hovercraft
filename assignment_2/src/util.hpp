@@ -63,3 +63,13 @@ void print_self_test_imu(MPU9250 imu){
     Serial.print(imu.selfTest[5], 1);
     Serial.println("% of factory value");
 }
+
+
+void print_calibration_imu(MPU9250 imu){
+  Serial.print("X-Axis factory sensitivity adjustment value ");
+      Serial.println(imu.factoryMagCalibration[0], 2);
+      Serial.print("Y-Axis factory sensitivity adjustment value ");
+      Serial.println(imu.factoryMagCalibration[1], 2);
+      Serial.print("Z-Axis factory sensitivity adjustment value ");
+      Serial.println(imu.factoryMagCalibration[2], 2);
+}
