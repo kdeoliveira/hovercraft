@@ -11,6 +11,10 @@
 #define I2Cport Wire
 #define MPU9250_ADDRESS MPU9250_ADDRESS_AD0
 
+
+#define ON LOW
+#define OFF HIGH
+
 MPU9250 mpu_imu(MPU9250_ADDRESS, I2Cport, I2Cclock);
 
 Servo myservo; // create servo object to control a servo
@@ -48,9 +52,9 @@ void setup()
     // =====================
 
     // Setting the gyro full scale range
-    mpu_imu.Gscale = MPU9250::GFS_2000DPS;
+    mpu_imu.Gscale = MPU9250::GFS_250DPS;
     // Setting the accelerator full scale range
-    mpu_imu.Ascale = MPU9250::AFS_16G;
+    mpu_imu.Ascale = MPU9250::AFS_2G;
 
     mpu_imu.initMPU9250();
 
@@ -102,7 +106,7 @@ void setup()
 
     // Setting sample rate
     // sample rates possible are 32 kHz (GYRO_CONFIG[1:0]=0x10), 8 kHz (CONFIG[2:0]=0x00), or 1 kHz (CONFIG[2:0]=0x03)
-    mpu_imu.writeByte(mpu_imu._I2Caddr, CONFIG, 0x06);
+    mpu_imu.writeByte(mpu_imu._I2Caddr, CONFIG, 0x03);
     uint8_t gyro_config = mpu_imu.readByte(mpu_imu._I2Caddr, GYRO_CONFIG);
     // F_CHOICE[1:0]
     // 00 => Allow CONFIG TO BE READ
@@ -130,6 +134,8 @@ void setup()
 
 void loop()
 {
+
+  
 
   if (mpu_imu.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)
   {
@@ -172,19 +178,21 @@ void loop()
   mpu_imu.pitch *= RAD_TO_DEG;
   mpu_imu.roll *= RAD_TO_DEG;
 
-  analogWrite(LED_PIN, 255 - map(1000 * abs(mpu_imu.ax), 1000 * 0.01, 1000, 0, 255));
+  if (mpu_imu.delt_t > 100){
+    analogWrite(LED_PIN, 255 - map(1000 * abs(mpu_imu.ax), 1000 * 0.01, 1000, 0, 255));
+  }
 
   if (mpu_imu.yaw + 180 < 180 || mpu_imu.yaw + 180 > 0)
   {
     int result_servo = (int)map(floor(mpu_imu.yaw) + 180, 0, 180, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);
     if (result_servo == 0)
     {
-      digitalWrite(LED_WARNING, LOW);
+      digitalWrite(LED_WARNING, ON);
       Serial.print("Out of bound\r");
     }
     else
     {
-      digitalWrite(LED_WARNING, HIGH);
+      digitalWrite(LED_WARNING, OFF);
       myservo.writeMicroseconds(result_servo);
     }
   }
@@ -203,6 +211,8 @@ void loop()
           mpu_imu.readByte(mpu_imu._I2Caddr, GYRO_CONFIG), BIN);
       Serial.print(
           " : ");
+    }
+
       Serial.print("ax = ");
       Serial.print((int)1000 * mpu_imu.ax);
       Serial.print(" mg  [");
@@ -217,15 +227,14 @@ void loop()
       Serial.print(mpu_imu.pitch, 2);
 
       Serial.print("\tRoll: ");
-      Serial.print(mpu_imu.roll, 2);
+      Serial.println(mpu_imu.roll, 2);
 
-      Serial.print("\trate = ");
-      Serial.print((float)mpu_imu.sumCount / mpu_imu.sum, 2);
-      Serial.println(" Hz");
+      // Serial.print("\trate = ");
+      // Serial.print((float)mpu_imu.sumCount / mpu_imu.sum, 2);
+      // Serial.println(" Hz");
 
       mpu_imu.count = millis();
       mpu_imu.sumCount = 0;
       mpu_imu.sum = 0;
-    }
-  }
+  } // if(mpu_imu.delta_t > 1000)
 }

@@ -1,6 +1,6 @@
 #pragma once
-#include "MPU9250.h"
 
+#include "MPU9250.h"
 
 long map(long x, long min, long max, long out_min, long out_max)
 {
@@ -20,7 +20,7 @@ long map(long x, long min, long max, long out_min, long out_max)
 
 
 void print_info_imu(MPU9250 imu){
-              Serial.println("AK8963 mag biases (mG)");
+    Serial.println("AK8963 mag biases (mG)");
     Serial.println(imu.magBias[0]);
     Serial.println(imu.magBias[1]);
     Serial.println(imu.magBias[2]);
@@ -30,13 +30,13 @@ void print_info_imu(MPU9250 imu){
     Serial.println(imu.magScale[1]);
     Serial.println(imu.magScale[2]);
 
-      Serial.println("Magnetometer:");
-      Serial.print("X-Axis sensitivity adjustment value ");
-      Serial.println(imu.factoryMagCalibration[0], 2);
-      Serial.print("Y-Axis sensitivity adjustment value ");
-      Serial.println(imu.factoryMagCalibration[1], 2);
-      Serial.print("Z-Axis sensitivity adjustment value ");
-      Serial.println(imu.factoryMagCalibration[2], 2);
+    Serial.println("Magnetometer:");
+    Serial.print("X-Axis sensitivity adjustment value ");
+    Serial.println(imu.factoryMagCalibration[0], 2);
+    Serial.print("Y-Axis sensitivity adjustment value ");
+    Serial.println(imu.factoryMagCalibration[1], 2);
+    Serial.print("Z-Axis sensitivity adjustment value ");
+    Serial.println(imu.factoryMagCalibration[2], 2);
 }
 
 
