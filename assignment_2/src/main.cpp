@@ -194,19 +194,19 @@ void loop()
 
   if (mpu_imu.delt_t > 1000) // 1s for serial print
   {
-    if (SerialDebug)
-    {
-      Serial.print("CONFIG register: ");
-      Serial.print(
-          mpu_imu.readByte(mpu_imu._I2Caddr, CONFIG), BIN);
+    // if (SerialDebug)
+    // {
+    //   Serial.print("CONFIG register: ");
+    //   Serial.print(
+    //       mpu_imu.readByte(mpu_imu._I2Caddr, CONFIG), BIN);
 
-      Serial.print(" - ");
-      Serial.print("GYRO_CONFIG register: ");
-      Serial.print(
-          mpu_imu.readByte(mpu_imu._I2Caddr, GYRO_CONFIG), BIN);
-      Serial.print(
-          " : ");
-    }
+    //   Serial.print(" - ");
+    //   Serial.print("GYRO_CONFIG register: ");
+    //   Serial.print(
+    //       mpu_imu.readByte(mpu_imu._I2Caddr, GYRO_CONFIG), BIN);
+    //   Serial.print(
+    //       " : ");
+    // }
 
       Serial.print("ax = ");
       Serial.print((int)1000 * mpu_imu.ax);
