@@ -105,13 +105,14 @@ int main(void)
 
         hc::STATE current_state = state_machine.run(distance_left, distance_front, distance_right);
 
+        //PID controller currently set only for one state 
         if (current_state == hc::STATE::LEFT)
         {
-
             input = distance_front;
             // input =  hc::Util::map(distance_front, 13.0, 40.0, 0, 255);
             pid_controller.Compute();
 
+            //PID should output to correct value
             servo_motor.writeMicroseconds(
                 hc::Util::map(output, 0, 255, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH)
             );
